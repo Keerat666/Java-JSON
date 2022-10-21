@@ -21,15 +21,16 @@ public class App {
         // parsing a JSON file
 
         list.clear();
+        elist.clear();
         try {
             FileReader reader = new FileReader("C:/Users/gurke/Desktop/Java-JSON/src/employee.json");
             JSONParser jsonParser = new JSONParser();
             JSONObject obj = (JSONObject) jsonParser.parse(reader);
             JSONArray employeeList = (JSONArray) obj.get("data");
-            elist.add(employeeList);
 
             for (int i = 0; i < employeeList.size(); i++) {
                 JSONObject emp = (JSONObject) employeeList.get(i);
+                elist.add(emp);
                 // if(emp.containsKey("firstName"))
                 // String t = (String)emp.get("firstName").toString();
                 String name = emp.get("FirstName").toString();
@@ -72,6 +73,7 @@ public class App {
         try {
             FileReader reader = new FileReader("C:/Users/gurke/Desktop/Java-JSON/src/employee.json");
             Object obj = jsonParser.parse(reader);
+
             Scanner ab = new Scanner(System.in);
             JSONObject n = new JSONObject();
 
@@ -116,7 +118,7 @@ public class App {
             String country = ab.nextLine();
             addressInternal.put("Country", country);
 
-            address.put("Address", addressInternal);
+            n.put("Address", addressInternal);
 
             System.out.println("Enter PhoneNumber");
             String pno = ab.nextLine();
@@ -145,10 +147,12 @@ public class App {
             JSONObject employeeObj = new JSONObject();
             employeeObj.put("data", elist);
 
+            System.out.println(n.toJSONString());
+
             FileWriter file = new FileWriter("C:/Users/gurke/Desktop/Java-JSON/src/employee.json");
             System.out.println(employeeObj.toJSONString());
-            file.write(employeeObj.toJSONString());
             file.flush();
+            file.write(employeeObj.toJSONString());
             file.close();
 
         } catch (Exception e) {
@@ -156,8 +160,9 @@ public class App {
         }
     }
 
-    public static void printData() {
+    public static void printData() throws IOException, org.json.simple.parser.ParseException {
 
+        convertJSONtoObjects();
         System.out.println("Name" + "\t\t" + "DOB" + "\t\t" + "Age" + "\t\t"
                 + "Address" + "\t\t\t\t\t\t" + "Phone" + "\t\t" + "Email" + "\t\t" + "Official Email"
                 + "\t" + "Qualification" + "\t" + "DOJ");
@@ -172,6 +177,115 @@ public class App {
 
     }
 
+    public static void editPhone() {
+        Scanner ab = new Scanner(System.in);
+        System.out.println("Enter Aadhar");
+        String aadhar = ab.nextLine();
+
+        for (int i = 0; i < list.size(); i++) {
+            Employee e = list.get(i);
+
+            if (e.getAadharNo().equals(aadhar)) {
+                System.out.println("Please enter the new phone number");
+                String ph = ab.nextLine();
+                elist.remove(i);
+
+                JSONParser jsonParser = new JSONParser();
+
+                try {
+                    FileReader reader = new FileReader("C:/Users/gurke/Desktop/Java-JSON/src/employee.json");
+                    Object obj = jsonParser.parse(reader);
+                    JSONObject n = new JSONObject();
+                    n.put("FirstName", e.getFirstName());
+                    n.put("LastName", e.getLastName());
+                    n.put("Dob", e.getDob());
+                    n.put("Age", e.getAge());
+
+                    JSONObject address = new JSONObject();
+                    JSONObject addressInternal = new JSONObject();
+                    addressInternal.put("FirstLine", e.getFirstLine());
+                    addressInternal.put("SecondLine", e.getSecondLine());
+                    addressInternal.put("City", e.getCity());
+                    addressInternal.put("State", e.getState());
+                    addressInternal.put("Post", e.getPost());
+                    addressInternal.put("Pincode", e.getPincode());
+                    addressInternal.put("Country", e.getCountry());
+
+                    n.put("Address", addressInternal);
+
+                    n.put("PhoneNumber", ph);
+                    n.put("email", e.getEmail());
+                    n.put("OfficialEmail", e.getOfficialEmail());
+                    n.put("Department", e.getDepartment());
+                    n.put("doj", e.getDoj());
+                    n.put("Qualification", e.getQualification());
+                    n.put("AadharNo", e.getAadharNo());
+
+                    elist.add(n);
+
+                    JSONObject employeeObj = new JSONObject();
+                    employeeObj.put("data", elist);
+
+                    System.out.println(n.toJSONString());
+
+                    FileWriter file = new FileWriter("C:/Users/gurke/Desktop/Java-JSON/src/employee.json");
+                    System.out.println(employeeObj.toJSONString());
+                    file.flush();
+                    file.write(employeeObj.toJSONString());
+                    file.close();
+                    System.out.println("Edit Success");
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.out.println("Error Encountered");
+
+                }
+
+                return;
+            }
+        }
+        System.out.println("Edit Unsuccessful");
+
+    }
+
+    public static void deleteEmployee() {
+        Scanner ab = new Scanner(System.in);
+        System.out.println("Enter Aadhar Number");
+        String aadhar = ab.nextLine();
+
+        for (int i = 0; i < list.size(); i++) {
+            Employee e = list.get(i);
+
+            if (e.getAadharNo().equals(aadhar)) {
+                elist.remove(i);
+
+                JSONParser jsonParser = new JSONParser();
+
+                try {
+                    FileReader reader = new FileReader("C:/Users/gurke/Desktop/Java-JSON/src/employee.json");
+                    Object obj = jsonParser.parse(reader);
+                    JSONObject employeeObj = new JSONObject();
+                    employeeObj.put("data", elist);
+                    FileWriter file = new FileWriter("C:/Users/gurke/Desktop/Java-JSON/src/employee.json");
+                    System.out.println(employeeObj.toJSONString());
+                    file.flush();
+                    file.write(employeeObj.toJSONString());
+                    file.close();
+                    System.out.println("Delete Success");
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.out.println("Error Encountered");
+
+                }
+
+                return;
+            }
+        }
+        System.out.println("Delete Unsuccessful");
+
+    }
+
     public static void main(String args[]) throws IOException, ParseException, org.json.simple.parser.ParseException {
 
         convertJSONtoObjects();
@@ -180,7 +294,7 @@ public class App {
         System.out.println("Welcome to the Employee Database");
 
         System.out.println(
-                "Enter 1 to view all employees\nEnter 2 to add new employee\nEnter 3 to search for a employee\nEnter 4 to edit the phone number of a employee\nEnter 5 to delete an employee by Aadhar Card Number\nEnter 6 to exit");
+                "Enter 1 to view all employees\nEnter 2 to add new employee\nEnter 3 to edit the phone number of a employee\nEnter 4 to delete an employee by Aadhar Card Number\nEnter 5 to exit");
 
         while (true) {
             System.out.println("Enter your choice");
@@ -189,10 +303,10 @@ public class App {
                 printData();
             else if (choice == 2)
                 addEmployee();
-            // else if (choice == 3)
-            // search();
-            // else if (choice == 4)
-            // editStudentPhoneNumber();
+            else if (choice == 3)
+                editPhone();
+            else if (choice == 4)
+                deleteEmployee();
             else
                 break;
         }
