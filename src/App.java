@@ -147,7 +147,7 @@ public class App {
 
             FileWriter file = new FileWriter("C:/Users/gurke/Desktop/Java-JSON/src/employee.json");
             System.out.println(employeeObj.toJSONString());
-            // file.write(employeeObj.toJSONString());
+            file.write(employeeObj.toJSONString());
             file.flush();
             file.close();
 
