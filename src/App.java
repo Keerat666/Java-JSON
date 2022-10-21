@@ -1,4 +1,3 @@
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,7 +7,6 @@ import java.util.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import java.util.Formatter;
 
 import Model.Employee;
 
@@ -30,9 +28,8 @@ public class App {
 
             for (int i = 0; i < employeeList.size(); i++) {
                 JSONObject emp = (JSONObject) employeeList.get(i);
+                // pushed an Employee obj to list as Obj
                 elist.add(emp);
-                // if(emp.containsKey("firstName"))
-                // String t = (String)emp.get("firstName").toString();
                 String name = emp.get("FirstName").toString();
                 String lname = emp.get("LastName").toString();
                 String dob = emp.get("Dob").toString();
@@ -58,6 +55,7 @@ public class App {
 
                 Employee t = new Employee(name, lname, dob, age, fline, sline, city, state, post, pin, country, pno,
                         email, oemail, dep, doj, quali, aadhar);
+                // pushed to list as Employee for easy tracking
                 list.add(t);
             }
 
@@ -150,10 +148,10 @@ public class App {
             System.out.println(n.toJSONString());
 
             FileWriter file = new FileWriter("C:/Users/gurke/Desktop/Java-JSON/src/employee.json");
-            System.out.println(employeeObj.toJSONString());
             file.flush();
             file.write(employeeObj.toJSONString());
             file.close();
+            System.out.println("New employee " + name + " added successfuly!");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -163,9 +161,10 @@ public class App {
     public static void printData() throws IOException, org.json.simple.parser.ParseException {
 
         convertJSONtoObjects();
-        System.out.println("Name" + "\t\t" + "DOB" + "\t\t" + "Age" + "\t\t"
-                + "Address" + "\t\t\t\t\t\t" + "Phone" + "\t\t" + "Email" + "\t\t" + "Official Email"
-                + "\t" + "Qualification" + "\t" + "DOJ");
+        // System.out.println("Name" + "\t\t" + "DOB" + "\t\t" + "Age" + "\t\t"
+        // + "Address" + "\t\t\t\t\t\t" + "Phone" + "\t\t" + "Email" + "\t\t" +
+        // "Official Email"
+        // + "\t" + "Qualification" + "\t" + "DOJ");
 
         for (int i = 0; i < list.size(); i++) {
             Employee t = list.get(i);
@@ -179,7 +178,7 @@ public class App {
 
     public static void editPhone() {
         Scanner ab = new Scanner(System.in);
-        System.out.println("Enter Aadhar");
+        System.out.println("Enter Aadhar Number of the Employee");
         String aadhar = ab.nextLine();
 
         for (int i = 0; i < list.size(); i++) {
@@ -250,7 +249,7 @@ public class App {
 
     public static void deleteEmployee() {
         Scanner ab = new Scanner(System.in);
-        System.out.println("Enter Aadhar Number");
+        System.out.println("Enter Aadhar Number of the employee who is to be deleted");
         String aadhar = ab.nextLine();
 
         for (int i = 0; i < list.size(); i++) {
@@ -258,6 +257,7 @@ public class App {
 
             if (e.getAadharNo().equals(aadhar)) {
                 elist.remove(i);
+                list.remove(i);
 
                 JSONParser jsonParser = new JSONParser();
 
